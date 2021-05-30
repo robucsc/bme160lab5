@@ -38,7 +38,18 @@ class OrfFinder:
         previousFrame = next(myCodons)[0]        # unpacking version , _, _ = next(myCodons)
         for frame, i, codon in myCodons:
             # check if codon is start
-            if codon in self.start:
+            if frame != previousFrame:      # handle danging starts for frame 1 and 2
+                for start in startPos:
+                    # orf is frame, start, stop, length -- in this case stop is the same as length
+                    if top:
+                        orf = [frame + 1, start + 1, len(self.seq), len(self.seq) - start]  # +1 offsets for alignment
+                    else:
+                        orf = [(frame + 1) * -1, 1, len(self.seq) - start, len(self.seq) - start]   # bottom strand
+                    orfList.append(orf)
+                startPos = [0]  # end of orf so init start position
+            previousFrame = frame
+
+            if codon in self.start: # frame 0
                 startPos.append(i)  # save position
                 print("starts ", codon)
             elif codon in self.stop:
@@ -46,22 +57,24 @@ class OrfFinder:
                     # compare to minGene
                     # if at start of seq.. always edge case if first stop found
                     if top:
-                        orf = [frame + 1, start + 1, i + 2 + 1, i - start + 3]  # +1 offsets for alignment, +2 for codon size
+                        orf = [frame + 1, start + 1, i + 2 + 1, i - start + 3]  # +1 offsets for alignment
                     else: # bottom strand non-dangling, and dangling stops
                         orf = [(frame + 1) * -1, (len(self.seq) + 1) - (i + 3), (len(self.seq) + 1) - (start + 1), (i + 3) - start]
                     orfList.append(orf)
                 startPos = []  # end of orf so init start position
-            if frame != previousFrame:      # handle danging starts
-                startPos = [0]
-                for start in startPos:
-                    # orf is frame, start, stop, length -- in this case stop is the same as length
-                    if top:
-                        orf = [frame + 1, start + 1, i - start + 3, i - start + 3]  # +1 offsets for alignment, +2 for codon size
-                    else:
-                        orf = [(frame + 1) * -1, 1, len(self.seq) - start, len(self.seq) - start]
-                    orfList.append(orf)
-                startPos = [0]  # end of orf so init start position
-            previousFrame = frame
+
+        for start in startPos: # frame 3 to end, only happens with no stop
+            if top:
+                orf = [frame + 1, start + 1, len(self.seq),
+                       len(self.seq) - start]  # +1 offsets for alignment, +2 for codon size
+            else:
+                orf = [(frame + 1) * -1, 1, len(self.seq) - start, len(self.seq) - start]
+                orfList.append(orf)
+
+                # start list make any ofrs as if dangling stop
+
+        print(startPos, frame, i)
+
         return orfList
 
     #    AAA AAA GAT GTA ATG
@@ -77,19 +90,10 @@ class OrfFinder:
 
     def revComp(self):
         self.seq = self.seq.replace('T', 'a').replace('A', 't').replace('G', 'c').replace('C', 'g').upper()[::-1]
-# 123456789
-# ATGATGTAA
-# 987654321
-# TTACATCAT
 
     def processBottomOrfs(self):
         self.revComp()                                      # reverse the sequence
-        bottomOrfs = self.findORFs(0)                        # call findORFS and return orf list
-        # for orf in bottomOrfs:                              # travers the list
-        #     orf[0] = orf[0] * -1                            # set frame to negitive
-            # orf[1] = len(self.seq) - orf[1]                 # adjust start position
-            # orf[2] = len(self.seq) - orf[2]                 # adjust end position
-            # orf = orf.len(seq) - position + 1             # swap the positions
+        bottomOrfs = self.findORFs(0)                       # call findORFS and return orf list
         return bottomOrfs                                   # return the list
 
     def findStrandedOrfs(self):
