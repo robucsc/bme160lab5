@@ -95,11 +95,12 @@ def main(inFile=None, options=None):
                           thisCommandLine.args.minGene)
 
         # myOrf.findStrandedOrfs()     # temp function to get things going
-        print('myOrf seq ', myOrf.seq)  # test call to myOrf
-        sortedOrf = sorted(myOrf.findStrandedOrfs(), key = lambda x: (x[3], -x[1]), reverse = True)
-        print('sorted orfs ', sortedOrf)
+        # print('myOrf seq ', myOrf.seq)  # debug code
+        sortedOrf = sorted(myOrf.findStrandedOrfs(), key = lambda x: (x[3], -x[1]), reverse = True) # x3 is length, -x1 is start, neg reverses to sort accecnding
+        # print('sorted orfs ', sortedOrf) # debug code
         for orf in sortedOrf:
-            print('{:+d} {:>5d}..{:>5d} {:>5d}'.format(orf[0], orf[1], orf[2], orf[3]))
+            print('{:+d} {:>5d}..{:>5d} {:>5d} {}'.format(orf[0], orf[1], orf[2], orf[3], orf[4])) # debug version
+            # print('{:+d} {:>5d}..{:>5d} {:>5d}'.format(orf[0], orf[1], orf[2], orf[3]))
 
     print(thisCommandLine.args)
 

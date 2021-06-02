@@ -1,0 +1,96 @@
+test
++1     1..    9     9 ATGATGTAA
++3     1..    9     9 ATGATGTAA
+-1     1..    9     9 TTACATCAT
+-2     1..    9     9 TTACATCAT
+-3     1..    9     9 TTACATCAT
++1     4..    9     6 ATGTAA
++2     1..    4     4 ATGA
+test2
++1     1..   10    10 AATGATGTAA
++2     1..   10    10 AATGATGTAA
+-1     1..   10    10 TTACATCATT
+-2     1..   10    10 TTACATCATT
+-3     1..   10    10 TTACATCATT
++2     2..   10     9 ATGATGTAA
++2     5..   10     6 ATGTAA
++3     1..    5     5 AATGA
+test3
++2     1..   11    11 AAATGATGTAA
++3     1..   11    11 AAATGATGTAA
+-1     1..   11    11 TTACATCATTT
+-2     1..   11    11 TTACATCATTT
+-3     1..   11    11 TTACATCATTT
++3     3..   11     9 ATGATGTAA
++1     1..    6     6 AAATGA
++3     6..   11     6 ATGTAA
+test-1
++1     1..    9     9 TTACATCAT
++2     1..    9     9 TTACATCAT
++3     1..    9     9 TTACATCAT
+-1     1..    9     9 ATGATGTAA
+-3     1..    9     9 ATGATGTAA
+-1     1..    6     6 ATGTAA
+-2     6..    9     4 ATGA
+test-2
++1     1..   10    10 TTACATCATA
++2     1..   10    10 TTACATCATA
++3     1..   10    10 TTACATCATA
+-1     1..   10    10 TATGATGTAA
+-2     1..   10    10 TATGATGTAA
+-2     1..    9     9 ATGATGTAA
+-2     1..    6     6 ATGTAA
+-3     6..   10     5 TATGA
+test-3
++1     1..   11    11 TTACATCATAA
++2     1..   11    11 TTACATCATAA
++3     1..   11    11 TTACATCATAA
+-2     1..   11    11 TTATGATGTAA
+-3     1..   11    11 TTATGATGTAA
+-3     1..    9     9 ATGATGTAA
+-3     1..    6     6 ATGTAA
+-1     6..   11     6 TTATGA
+test1A
++3     1..   10    10 ATGATGTAAA
+-1     1..   10    10 TTTACATCAT
+-2     1..   10    10 TTTACATCAT
+-3     1..   10    10 TTTACATCAT
++1     1..    9     9 ATGATGTAA
++1     4..    9     6 ATGTAA
++2     1..    4     4 ATGA
+test2A
++1     1..   11    11 AATGATGTAAA
+-1     1..   11    11 TTTACATCATT
+-2     1..   11    11 TTTACATCATT
+-3     1..   11    11 TTTACATCATT
++2     1..   10    10 AATGATGTAA
++2     2..   10     9 ATGATGTAA
++2     5..   10     6 ATGTAA
++3     1..    5     5 AATGA
+test3A
++2     1..   12    12 AAATGATGTAAA
+-1     1..   12    12 TTTACATCATTT
+-2     1..   12    12 TTTACATCATTT
+-3     1..   12    12 TTTACATCATTT
++3     1..   11    11 AAATGATGTAA
++3     3..   11     9 ATGATGTAA
++1     1..    6     6 AAATGA
++3     6..   11     6 ATGTAA
+test-1A
++1     1..   10    10 ATTACATCAT
++2     1..   10    10 ATTACATCAT
++3     1..   10    10 ATTACATCAT
+-3     1..   10    10 ATGATGTAAT
+-1     2..   10     9 ATGATGTAA
+-1     2..    7     6 ATGTAA
+-2     7..   10     4 ATGA
+test-2A
++1     1..   12    12 AATTACATCATA
++2     1..   12    12 AATTACATCATA
++3     1..   12    12 AATTACATCATA
+-1     1..   12    12 TATGATGTAATT
+-2     3..   12    10 TATGATGTAA
+-2     3..   11     9 ATGATGTAA
+-2     3..    8     6 ATGTAA
+-3     8..   12     5 TATGA
+

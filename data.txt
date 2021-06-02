@@ -1,9 +1,0 @@
-test-3A
-+1     1..   13    13 (ATG)...AAT TAC ATC ATA A     # dangling start and stop
-+2     1..   13    13 A ATT ACA TCA TAA
-+3     1..   13    13 AATTACATCATAA
--2     1..   13    13 TTATGATGTAATT
--3     3..   13    11 TTATGATGTAA
--3     3..   11     9 ATGATGTAA
--3     3..    8     6 ATGTAA
--1     8..   13     6 TTATGA
