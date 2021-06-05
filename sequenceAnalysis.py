@@ -46,12 +46,15 @@ class OrfFinder:
                     # if (frameOffset == 2):      # this was a test to see if it was the issue, it sort of worked
                     #     frameOffset = 0
                     if top:
-                        orf = [frameOffset + 1, start + 1, len(self.seq), len(self.seq) - start,
+                        orfLength = len(self.seq) - start
+                        orf = [frameOffset + 1, start + 1, len(self.seq), orfLength,
                                self.seq[start:len(self.seq)] + '1']  # +1 offsets for alignment
                     else:
-                        orf = [(frameOffset + 1) * -1, 1, len(self.seq) - start, len(self.seq) - start,
+                        orfLength = len(self.seq) - start
+                        orf = [(frameOffset + 1) * -1, 1, len(self.seq) - start, orfLength,
                                self.seq[start:len(self.seq) - start] + '2']   # bottom strand
-                    orfList.append(orf)
+                    if (orfLength > self.minGene):  #minGene comparison, if smaller don't append
+                        orfList.append(orf)
                 startPos = [0]  # end of orf so init start position
             previousFrame = frame
 
@@ -63,25 +66,31 @@ class OrfFinder:
                     # compare to minGene, is the length greater than minGene - not implemented yet
                     # if at start of seq.. always edge case if first stop found
                     if top:
-                        orf = [frame + 1, start + 1, i + 2 + 1, i - start + 3,
+                        orfLength = i - start + 3
+                        orf = [frame + 1, start + 1, i + 2 + 1, orfLength,
                                self.seq[start:i + 2 + 1] + '3']  # +1 offsets for alignment
-                    else: # bottom strand non-dangling, and dangling stops
+                    else:   # bottom strand non-dangling, and dangling stops
                         # print('frame bot ', frame)
+                        orfLength = i - start + 3
                         orf = [(frame + 1) * -1, (len(self.seq) + 1) - (i + 3),
-                               (len(self.seq) + 1) - (start + 1), (i + 3) - start,
+                               (len(self.seq) + 1) - (start + 1), orfLength,
                                self.seq[start:(len(self.seq) + 1) - (start + 1)] + '4']
-                    orfList.append(orf)
+                    if (orfLength > self.minGene):  #minGene comparison, if smaller don't append
+                        orfList.append(orf)
                 startPos = []  # end of orf so init start position
 
         for start in startPos:      # frame 3 to end, only happens with no stop
             # print('priv ', previousFrame)
             if top:
+                orfLength = len(self.seq) - start
                 orf = [previousFrame + 1, start + 1, len(self.seq),
-                       len(self.seq) - start, self.seq[start:len(self.seq)] + '5']  # +1 offsets for alignment, +2 for codon size
+                       orfLength, self.seq[start:len(self.seq)] + '5']  # +1 offsets for alignment, +2 for codon size
             else:
+                orfLength = len(self.seq) - start
                 orf = [(previousFrame + 1) * -1, 1, len(self.seq) - start,
-                       len(self.seq) - start, self.seq[start:len(self.seq) - start]  + '6']
-            orfList.append(orf)
+                       orfLength, self.seq[start:len(self.seq) - start]  + '6']
+            if (orfLength > self.minGene):  #minGene comparison, if smaller don't append
+                orfList.append(orf)
         # print(startPos, previousFrame)  # debug code
         return orfList
 
