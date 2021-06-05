@@ -42,11 +42,11 @@ class OrfFinder:
             if frame != previousFrame:                      # handle danging starts for frame 1 and 2
                 for start in startPos:
                     # orf is frame, start, stop, length, seq-code section -- in this case stop is the same as length
-                    if top:                                 # top strand
+                    if top:                                 # top strand - section 1
                         orfLength = len(self.seq) - start   # precalc orf length
                         orf = [frame + 1, start + 1, len(self.seq), orfLength,
                                self.seq[start:len(self.seq)] + ' 1']  # +1 offsets for alignment
-                    else:                                   # bottom strand
+                    else:                                   # bottom strand - section 2
                         orfLength = len(self.seq) - start   # precalc orf length
                         orf = [(frame + 1) * -1, 1, len(self.seq) - start, orfLength,
                                self.seq[start:len(self.seq) - start] + ' 2']
@@ -62,11 +62,11 @@ class OrfFinder:
                 for start in startPos:
                     # compare to minGene, is the length greater than minGene - not implemented yet
                     # if at start of seq.. always edge case if first stop found
-                    if top:     # top strand
+                    if top:                                 # top strand - section 3
                         orfLength = i - start + 3           # precalc orf length
                         orf = [frame + 1, start + 1, i + 2 + 1, orfLength,
                                self.seq[start:i + 2 + 1] + ' 3']  # +1 offsets for alignment
-                    else:       # bottom strand non-dangling, and dangling stops
+                    else:       # bottom strand non-dangling, and dangling stops - section 4
                         orfLength = i - start + 3           # precalc orf length
                         orf = [(frame + 1) * -1, (len(self.seq) + 1) - (i + 3),
                                (len(self.seq) + 1) - (start + 1), orfLength,
@@ -76,12 +76,12 @@ class OrfFinder:
                 startPos = []                               # end of orf so init start position
 
         for start in startPos:                              # frame 3 to end, only happens with no stop
-            if top:
+            if top:                                         # top strand - section 5
                 orfLength = len(self.seq) - start           # precalc orf length
                 orf = [previousFrame + 1, start + 1, len(self.seq),
                        orfLength, self.seq[start:len(self.seq)] + ' 5']  # +1 offsets for alignment, +2 for codon size
             else:
-                orfLength = len(self.seq) - start           # precalc orf length
+                orfLength = len(self.seq) - start           # precalc orf length - section 6
                 orf = [(previousFrame + 1) * -1, 1, len(self.seq) - start,
                        orfLength, self.seq[start:len(self.seq) - start]  + ' 6']
             if (orfLength > self.minGene):                  # minGene comparison, if smaller don't append
