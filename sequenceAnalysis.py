@@ -44,11 +44,11 @@ class OrfFinder:
                     # orf is frame, start, stop, length, seq-code section -- in this case stop is the same as length
                     if top:                                 # top strand - section 1
                         orfLength = len(self.seq) - start   # precalc orf length
-                        orf = [frame + 1, start + 1, len(self.seq), orfLength,
+                        orf = [frame + 0, start + 1, len(self.seq), orfLength,
                                self.seq[start:len(self.seq)] + ' 1']  # +1 offsets for alignment
                     else:                                   # bottom strand - section 2
                         orfLength = len(self.seq) - start   # precalc orf length
-                        orf = [(frame + 1) * -1, 1, len(self.seq) - start, orfLength,
+                        orf = [(frame + 0) * -1, 1, len(self.seq) - start, orfLength,
                                self.seq[start:len(self.seq) - start] + ' 2']
                     if (orfLength > self.minGene):          # minGene comparison, if smaller don't append
                         orfList.append(orf)                 # add orf to the list
