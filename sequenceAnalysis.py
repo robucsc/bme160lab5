@@ -52,7 +52,10 @@ class OrfFinder:
                                self.seq[start:len(self.seq) - start] + ' 2']
                     if (orfLength > self.minGene):          # minGene comparison, if smaller don't append
                         orfList.append(orf)                 # add orf to the list
+                # if (not self.longestGene):
                 startPos = [0]                              # end of orf so init start position
+                # else:
+                #     startPos.clear()
             previousFrame = frame                           # set previousFrame for next loop
 
             if codon in self.start:                         # frame 0
@@ -60,6 +63,8 @@ class OrfFinder:
                 # print("starts ", codon)                   # debug code
             elif codon in self.stop:
                 for start in startPos:
+                    if (self.longestGene):
+                        startPos.clear()
                     # compare to minGene, is the length greater than minGene - not implemented yet
                     # if at start of seq.. always edge case if first stop found
                     if top:                                 # top strand - section 3

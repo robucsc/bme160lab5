@@ -69,8 +69,6 @@ class CommandLine():
 ########################################################################
 # Main
 # Here is the main program
-#
-#
 ########################################################################
 
 def main(inFile=None, options=None):
@@ -79,8 +77,8 @@ def main(inFile=None, options=None):
     '''
     thisCommandLine = CommandLine(options)
 
-    myFasta = FastAreader(inFile) # use this for debugging.
-    # myFasta = FastAreader() # use this one for the command line (also to turn in)
+    # myFasta = FastAreader(inFile) # use this for debugging.
+    myFasta = FastAreader() # use this one for the command line (also to turn in)
 
     for head, seq in myFasta.readFasta():
         # preprocess sequence
@@ -94,15 +92,13 @@ def main(inFile=None, options=None):
                           thisCommandLine.args.longestGene,
                           thisCommandLine.args.minGene)
 
-        # myOrf.findStrandedOrfs()     # temp function to get things going
-        # print('myOrf seq ', myOrf.seq)  # debug code
         sortedOrf = sorted(myOrf.findStrandedOrfs(), key = lambda x: (x[3], -x[1]), reverse = True) # x3 is length, -x1 is start, neg reverses to sort accecnding
         # print('sorted orfs ', sortedOrf) # debug code
         for orf in sortedOrf:
-            print('{:+d} {:>5d}..{:>5d} {:>5d} {}'.format(orf[0], orf[1], orf[2], orf[3], orf[4])) # debug version
-            # print('{:+d} {:>5d}..{:>5d} {:>5d}'.format(orf[0], orf[1], orf[2], orf[3]))
+            # print('{:+d} {:>5d}..{:>5d} {:>5d} {}'.format(orf[0], orf[1], orf[2], orf[3], orf[4])) # debug version
+            print('{:+d} {:>5d}..{:>5d} {:>5d}'.format(orf[0], orf[1], orf[2], orf[3]))
 
-    print(thisCommandLine.args)
+    # print(thisCommandLine.args)
 
     # print(thisCommandLine.args.longestGene)
     # print(thisCommandLine.args.start)
@@ -112,5 +108,5 @@ def main(inFile=None, options=None):
 
 if __name__ == "__main__":
     # main(inFile='tass2.fa', options=['-mG=300', '-lG'])  # delete this stuff if running from commandline
-    main(inFile='lab5test.fa', options=['-mG=0', '-lG'])  # delete this stuff if running from commandline
-    # main()  # use this stuff if running from commandline (and for turning in)
+    # main(inFile='lab5test.fa', options=['-mG=0', '-lG'])  # delete this stuff if running from commandline
+    main()  # use this stuff if running from commandline (and for turning in)
