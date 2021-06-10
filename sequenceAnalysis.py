@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # Name: Rob Lodes (rlodes)
-# Group Members: Got lots of help from Stephen (the tutor) on this assignment
+# Group Members: Got lots of help from multiple tutors, and even David on this assignment
 """
-    This file contains three classes NucParams, FastAreader, and ProteinParam
+    This file contains four classes OrfFinder, NucParams, FastAreader, and ProteinParam
+
+    OrfFinder analyzes a FASTA-formatted file containing a sequence of DNA, and finds the ORFs.
 
     NucParams converts FastA sequences into codon, amino acid, and nucleotide dictionaries.
 
@@ -12,8 +14,15 @@
 """
 
 class OrfFinder:
-    ''' doc string '''
+    '''
+    Analyzes a FASTA-formatted file containing a sequence of DNA, and finds the ORFs.
+    Input: a FASTA file
+    Output: formatted output listing the seq name, and for each ORFs the frame, start, stop and legngth. The frame
+        is noted with a +/- to illustrate top/bottom reading of the strand.
+    Classes: __init__, makeCodon, findORFs, revComp, processBottomOrfs, findStrandedOrfs
+    '''
     def __init__(self, seq, start, stop, longestGene, minGene):
+        ''' init, bring in the arguments when called '''
         self.seq = seq
         self.start = start
         self.stop = stop
@@ -27,18 +36,19 @@ class OrfFinder:
         for frame in range(3):
             for offsetIndex in range(frame, len(self.seq), 3):
                 codon = self.seq[offsetIndex:offsetIndex + 3]
-                # print('frame ', frame + 1, 'codon ', codon)     # debug code, the frame +1 is for ease in reading
                 yield frame, offsetIndex, codon  # yield for generator
 
     def findORFs(self, top):
+        '''
+        Analyzes a FASTA-formatted file containing a sequence of DNA, and finds the ORFs.
+        '''
         orfList = []
         startPos = [0]                          # start at zero to accommodate dangling starts
         myCodons = self.makeCodon()             # to allow for the generator to be nexted
-        # next(myCodons)                        # skips the first zero codon to account for the generator starting at zero
-                                                # use next in the previous - this step is now in the following line
-        previousFrame = next(myCodons)[0]       # unpacking version , _, _ = next(myCodons)
+        previousFrame = next(myCodons)[0]       # skips the first zero codon to account for the generator starting at zero
+                                                # use next in the previous
+                                                # unpacking version , _, _ = next(myCodons)
         for frame, i, codon in myCodons:
-            # check if codon is start
             if frame != previousFrame:                      # handle danging starts for frame 1 and 2
                 for start in startPos:
                     # orf is frame, start, stop, length, seq-code section -- in this case stop is the same as length
@@ -52,21 +62,15 @@ class OrfFinder:
                                self.seq[start:len(self.seq) - start] + ' 2']
                     if (orfLength > self.minGene):          # minGene comparison, if smaller don't append
                         orfList.append(orf)                 # add orf to the list
-                # if (not self.longestGene):
                 startPos = [0]                              # end of orf so init start position
-                # else:
-                #     startPos.clear()
             previousFrame = frame                           # set previousFrame for next loop
 
             if codon in self.start:                         # frame 0
                 startPos.append(i)                          # save position
-                # print("starts ", codon)                   # debug code
             elif codon in self.stop:
                 for start in startPos:
-                    if (self.longestGene):
-                        startPos.clear()
-                    # compare to minGene, is the length greater than minGene - not implemented yet
-                    # if at start of seq.. always edge case if first stop found
+                    if (self.longestGene):                  # trap for longestGene state
+                        startPos.clear()                    # clear all starts to only add longestGene
                     if top:                                 # top strand - section 3
                         orfLength = i - start + 3           # precalc orf length
                         orf = [frame + 1, start + 1, i + 2 + 1, orfLength,
@@ -94,21 +98,22 @@ class OrfFinder:
         return orfList
 
     def revComp(self):                                      # reverse the seq for use in bottom strand
+        ''' reverse the sequence -- used for finding bottom stand ORFs '''
         self.seq = self.seq.replace('T', 'a').replace('A', 't').replace('G', 'c').replace('C', 'g').upper()[::-1]
 
     def processBottomOrfs(self):
+        ''' process the bottom strand for ORFs '''
         self.revComp()                                      # reverse the sequence
         bottomOrfs = self.findORFs(0)                       # call findORFS and return orf list, 0 for bottom strand
         return bottomOrfs                                   # return the list
 
     def findStrandedOrfs(self):
+        ''' process the sequence for ORFs, combine them, and  return the results '''
         topStrandOrf = self.findORFs(1)                     # 1 for top strand
-        # print('top strand ', topStrandOrf)                # debug code
         bottomStrandOrf = self.processBottomOrfs()          # call code for bottom strand
-        # print('bottom strand ', bottomStrandOrf)          # debug code
         return topStrandOrf + bottomStrandOrf               # add strands and return
+                                                            # it's always hard to find the one you want
 
-# it's always hard to find the one you want
 class NucParams:
     '''
     Convert FastA sequences into codon, amino acid, and nucleotide dictionaries.
